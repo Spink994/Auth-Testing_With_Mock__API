@@ -5,7 +5,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
   const [userData, setuserData] = useState({
     email: "",
     password: "",
@@ -39,27 +39,31 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await axios.post("/login", { ...userData });
-    const { status, statusText } = response;
-    if (status === 200 && statusText === "OK");
-    setTimeout(() => {
-      navigate("/Dashboard");
-    }, 500);
-
-    if (status !== 200) setError("User not found!");
-    setTimeout(() => {
-      setError(null);
-    }, 4000);
+    try {
+      const response = await axios.post("/login", { ...userData });
+      const { status, statusText } = response;
+      if (status === 200 && statusText === "OK");
+      setTimeout(() => {
+        navigate("/Dashboard");
+      }, 500);
+    } catch {
+      setError("User not found!");
+      setTimeout(() => {
+        setError(null);
+      }, 4000);
+    }
   };
 
   return (
     <div className="w-full flex flex-col justify-center space-y-8 items-center">
       <h1 className="font-bold text-center text-2xl">Spink Login Test Form</h1>
       <h2 className="font-bold text-center text-lg">Login Here</h2>
-      {error !== null && (
-        <div className="flex justify-center items-center p-2 h-[30px] w-full mx-4">
+      {error ? (
+        <div className="flex justify-center items-center p-2 h-[80px] bg-red-200 text-red-600 w-[80%] mx-4">
           <p>{error}</p>
         </div>
+      ) : (
+        ""
       )}
       <form
         onSubmit={handleSubmit}
