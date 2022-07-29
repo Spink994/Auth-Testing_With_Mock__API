@@ -5,6 +5,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const [error, setError] = useState(null);
   const [userData, setuserData] = useState({
     email: "",
     password: "",
@@ -44,12 +45,22 @@ const Login = () => {
     setTimeout(() => {
       navigate("/Dashboard");
     }, 500);
+
+    if (status !== 200) setError("User not found!");
+    setTimeout(() => {
+      setError(null);
+    }, 4000);
   };
 
   return (
     <div className="w-full flex flex-col justify-center space-y-8 items-center">
       <h1 className="font-bold text-center text-2xl">Spink Login Test Form</h1>
       <h2 className="font-bold text-center text-lg">Login Here</h2>
+      {error !== null && (
+        <div className="flex justify-center items-center p-2 h-[30px] w-full mx-4">
+          <p>{error}</p>
+        </div>
+      )}
       <form
         onSubmit={handleSubmit}
         className="w-full flex justify-center items-center space-y-4 flex-col"
